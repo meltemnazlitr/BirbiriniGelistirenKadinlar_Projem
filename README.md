@@ -1,1 +1,2 @@
 # BirbiriniGelistirenKadinlar_Projem
+teşekkürler! 
