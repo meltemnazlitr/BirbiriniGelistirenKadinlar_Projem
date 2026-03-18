@@ -1,0 +1,32 @@
+# AI Sağlık ve Dijital Denge Asistanı
+
+## Problem
+Günümüzde çocuklar, gençler ve yetişkinler uzun süre telefon ve bilgisayar kullanıyor. 
+Bu durum göz sağlığı, duruş bozuklukları, ekran bağımlılığı ve genel yaşam kalitesi üzerinde olumsuz etki yaratıyor. 
+İnsanlar bu alışkanlıkları takip etmekte ve düzenlemek konusunda zorlanıyor.
+
+## Hedef Kullanıcı
+- Çocuklar
+- Üniversite öğrencileri ve gençler
+- Ofis çalışanı yetişkinler
+
+## Çözüm
+Bu uygulama yapay zeka kullanarak kullanıcıların ekran süresi, oturuş alışkanlıkları ve göz sağlığı ile ilgili verilerini analiz eder. 
+Kişiye özel öneriler sunarak daha sağlıklı dijital kullanım alışkanlıkları geliştirmelerine yardımcı olur.
+
+## Özellikler
+- Ekran süresi takibi
+- Göz dinlendirme hatırlatmaları
+- Doğru oturuş (postür) önerileri
+- Günlük sağlık önerileri
+- Yaşa göre kişiselleştirilmiş tavsiyeler
+
+## Farkımız
+Mevcut uygulamalar sadece ekran süresi gösterirken, bu proje yapay zeka ile analiz yapar ve kişisel sağlık önerileri üretir. 
+Hem çocuklar hem gençler hem yetişkinler için tek bir platform sunar.
+
+## Gelecek Geliştirmeler
+- AI destekli sağlık raporları
+- Haftalık analiz
+- Bildirim sistemi
+- Göz mesafesi ölçüm entegrasyonu
