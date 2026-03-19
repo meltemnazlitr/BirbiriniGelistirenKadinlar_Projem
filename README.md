@@ -1,5 +1,29 @@
-# BirbiriniGelistirenKadinlar_Projem
-teşekkürler! 
+BirbiriniGelistirenKadinlar_Projem
+teşekkürler! altta da yazı vardır.
+bgk tarafından verilen doldurmam gereken yazı:
+Elimde Olan Sağlık
+ Problem
+aslında aklıma İK hakkında ve daha bir sürü konuda geldi ama ilk yaptığım proje bu oldu. Bir proje istendiği için üzülsemde heyecanlıyım.
+Çocuklar için güvenli ai,hikaye yoluyla çıkılan bu fikir gençlerin en çok göz ardı ettiği gözlük,duruş sorunlarıyla devam etti. elimizde olan sağlık,elimize sağlık!!
+Çözüm
+Uygulama size isim yaş soruyor bir avatar atıyor. duruşunuzu,gözünüzü,kilonuzu umursuyor.Bunların hepsi AI ile!!
+Canlı Demo
+Yayın linkim Replit ile olacaktır. Videoda Google ai studio halini de göstereceğim.
+Demo Video: videoyu da youtube da paylaşıyor formuma ekliyor olacağım.
+Kullanılan Teknolojiler
+chatgpt,gemini,lovable,google ai studio,replit ve dahası
+
+Nasıl Çalıştırılır?
+Öncelikle teşekkürler. 
+websiteye giriyoruz. adımızı yaşımızı yazıyor hangi avatarı istediğimizi seçiyoruz. (duygunu söyle 20 puan kazan!)
+sonrasında duruşun,gözün kilon,bir çocuk için hikaye. Hepsini dene ve işte Eline Sağlık! Elinde olan sağlık!
+
+
+
+
+
+yazdığım prompt.
+
 Merhaba. Senden bir website istiyorum. Sağlık,çocuk için. Girişte önce yaş,isim soracak. Bir avatar seçilecek mesela beyaz kedi veya siyah kedi sonra bu kediyi giydirmek için puan kazanma gerekecek.
 Notlarım bunlar: 
 Çocuklar için yapay zeka mesela uyku arkadaşı, Beslenme için de öneriler.
