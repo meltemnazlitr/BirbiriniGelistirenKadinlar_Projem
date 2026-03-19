@@ -1,0 +1,86 @@
+import { useState } from 'react';
+import { Onboarding } from './components/Onboarding';
+import { ChildSection } from './components/ChildSection';
+import { TeenSection } from './components/TeenSection';
+import { FishAvatar } from './components/FishAvatar';
+import { UserInfo, AppSection } from './types';
+
+export default function App() {
+  const [section, setSection] = useState<AppSection>('onboarding');
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  const handleOnboardingComplete = (info: UserInfo) => {
+    setUser(info);
+    setSection('teen'); 
+  };
+
+  const addPoints = (amount: number) => {
+    setUser(prev => {
+      if (!prev) return null;
+      return { ...prev, points: prev.points + amount };
+    });
+  };
+
+  const updateUser = (updates: Partial<UserInfo>) => {
+    setUser(prev => {
+      if (!prev) return null;
+      return { ...prev, ...updates };
+    });
+  };
+
+  const handlePurchase = (itemId: string, price: number) => {
+    setUser(prev => {
+      if (!prev) return null;
+      if (prev.points >= price) {
+        return {
+          ...prev,
+          points: prev.points - price,
+          unlockedItems: [...prev.unlockedItems, itemId]
+        };
+      }
+      return prev;
+    });
+  };
+
+  const toggleSection = () => {
+    setSection(prev => prev === 'child' ? 'teen' : 'child');
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {section === 'onboarding' && (
+        <Onboarding onComplete={handleOnboardingComplete} />
+      )}
+
+      {user && section !== 'onboarding' && (
+        <>
+          {section === 'child' ? (
+            <ChildSection 
+              user={user} 
+              onNext={toggleSection} 
+              addPoints={addPoints} 
+              updateUser={updateUser}
+            />
+          ) : (
+            <TeenSection 
+              user={user} 
+              addPoints={addPoints} 
+            />
+          )}
+          
+          <FishAvatar user={user} onPurchase={handlePurchase} />
+
+          <button 
+            onClick={toggleSection}
+            className="fixed top-6 right-6 z-40 flex items-center gap-2 text-zinc-400 hover:text-zinc-800 transition-colors group"
+          >
+            <span className="text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+              {section === 'child' ? 'Genç Bölümü' : 'Çocuk Bölümü'}
+            </span>
+            <div className="w-8 h-[2px] bg-current" />
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
