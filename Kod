@@ -1,0 +1,23 @@
+export interface UserInfo {
+  name: string;
+  age: number;
+  avatar: 'orange' | 'gray';
+  points: number;
+  unlockedItems: string[];
+}
+
+export type AppSection = 'onboarding' | 'child' | 'teen';
+
+export interface ShopItem {
+  id: string;
+  name: string;
+  price: number;
+  icon: string;
+}
+
+export const SHOP_ITEMS: ShopItem[] = [
+  { id: 'hat', name: 'Şapka', price: 50, icon: '🎩' },
+  { id: 'glasses', name: 'Gözlük', price: 30, icon: '🕶️' },
+  { id: 'scarf', name: 'Atkı', price: 40, icon: '🧣' },
+  { id: 'ribbon', name: 'Kurdele', price: 20, icon: '🎀' },
+];
