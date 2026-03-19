@@ -1,3 +1,4 @@
+
 export interface UserInfo {
   name: string;
   age: number;
@@ -21,3 +22,281 @@ export const SHOP_ITEMS: ShopItem[] = [
   { id: 'scarf', name: 'Atkı', price: 40, icon: '🧣' },
   { id: 'ribbon', name: 'Kurdele', price: 20, icon: '🎀' },
 ];
+
+import { GoogleGenAI } from "@google/genai";
+
+const ai = new GoogleGenAI({ apiKey: "YOUR_GEMINI_API_KEY" }); // Lovable'da kendi anahtarını eklemelisin
+
+export const generateStory = async (mood: string, age: number) => {
+  const model = "gemini-3-flash-preview";
+  const prompt = `Çocuklar için ${age} yaşında bir çocuğa uygun, ${mood} ruh haline göre sakinleştirici veya neşeli bir uyku masalı anlat. Masal kısa ve eğitici olsun.`;
+  const response = await ai.models.generateContent({ model, contents: prompt });
+  return response.text;
+};
+
+export const analyzeMood = async (text: string) => {
+  const model = "gemini-3-flash-preview";
+  const prompt = `Şu metne göre kullanıcının ruh halini analiz et ve ona olumlu, motive edici bir not kağıdı mesajı yaz: "${text}"`;
+  const response = await ai.models.generateContent({ model, contents: prompt });
+  return response.text;
+};
+
+import React, { useState } from 'react';
+import { motion } from 'motion/react';
+import { UserInfo } from '../types';
+
+interface OnboardingProps {
+  onComplete: (info: UserInfo) => void;
+}
+
+export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
+  const [name, setName] = useState('');
+  const [age, setAge] = useState<number>(0);
+  const [avatar, setAvatar] = useState<'orange' | 'gray'>('orange');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name && age > 0) {
+      onComplete({ name, age, avatar, points: 100, unlockedItems: [] });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center p-6 font-sans">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full space-y-8 text-center">
+        <h1 className="text-4xl font-bold text-zinc-900 tracking-tight">Elimde Olan Sağlık</h1>
+        <form onSubmit={handleSubmit} className="space-y-6 text-left">
+          <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-zinc-200" placeholder="İsmin nedir?" />
+          <input type="number" required value={age || ''} onChange={(e) => setAge(parseInt(e.target.value))} className="w-full px-4 py-3 rounded-xl border border-zinc-200" placeholder="Kaç yaşındasın?" />
+          <div className="grid grid-cols-2 gap-4">
+            <button type="button" onClick={() => setAvatar('orange')} className={`p-4 rounded-3xl border-4 ${avatar === 'orange' ? 'border-emerald-500 bg-emerald-50' : 'border-zinc-100'}`}>
+              <span className="text-4xl">🐠</span>
+              <p className="text-[10px] font-black uppercase mt-2">Turuncu Balık</p>
+            </button>
+            <button type="button" onClick={() => setAvatar('gray')} className={`p-4 rounded-3xl border-4 ${avatar === 'gray' ? 'border-emerald-500 bg-emerald-50' : 'border-zinc-100'}`}>
+              <span className="text-4xl">🐟</span>
+              <p className="text-[10px] font-black uppercase mt-2">Koyu Balık</p>
+            </button>
+          </div>
+          <button type="submit" className="w-full py-4 bg-zinc-900 text-white rounded-xl font-semibold">Hadi Başlayalım!</button>
+        </form>
+      </motion.div>
+    </div>
+  );
+};
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { UserInfo } from '../types';
+import { Moon, BookOpen, ArrowRight } from 'lucide-react';
+import { generateStory } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+
+export const ChildSection: React.FC<any> = ({ user, onNext, addPoints, updateUser }) => {
+  const [story, setStory] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [hasCheckedMood, setHasCheckedMood] = useState(false);
+
+  const simulateVoiceAnalysis = () => {
+    setIsRecording(true);
+    setTimeout(async () => {
+      setIsRecording(false);
+      setLoading(true);
+      const res = await generateStory('sakin', user.age);
+      setStory(res);
+      addPoints(10);
+      setLoading(false);
+    }, 3000);
+  };
+  return (
+    <div className="min-h-screen bg-[#FDFCF0] p-6 font-sans">
+      <div className="max-w-2xl mx-auto space-y-8">
+        <header className="flex justify-between items-center">
+          <h2 className="text-3xl font-bold">Merhaba {user.name}!</h2>
+          <button onClick={onNext} className="p-3 bg-white rounded-full shadow-md"><ArrowRight /></button>
+        </header>
+
+        <div className="grid grid-cols-1 gap-6">
+          <div className="bg-white p-10 rounded-[3rem] shadow-xl border-4 border-blue-100 text-center">
+            <Moon size={40} className="mx-auto mb-4 text-blue-500" />
+            <h3 className="text-3xl font-black mb-4">Uyku Arkadaşı</h3>
+            <button onClick={simulateVoiceAnalysis} className="w-full py-5 bg-blue-600 text-white rounded-[2rem] text-xl font-black">
+              {loading ? 'Hazırlanıyor...' : isRecording ? 'Dinliyorum...' : 'Hadi Masal Anlat! 🌙'}
+            </button>
+          </div>
+
+          <div className="bg-white p-6 rounded-[2rem] shadow-lg border-2 border-emerald-100">
+            <h3 className="text-xl font-bold mb-4">Bugün nasıl hissediyorsun?</h3>
+            {!hasCheckedMood ? (
+              <div className="flex justify-around">
+                {['😊', '😴', '🤔', '🤩'].map(emoji => (
+                  <button key={emoji} onClick={() => { addPoints(20); setHasCheckedMood(true); }} className="text-4xl hover:scale-110 transition-transform">{emoji}</button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-emerald-600 font-bold text-center">Harika! +20 Puan kazandın! 🌟</p>
+            )}
+          </div>
+        </div>
+
+        {story && <div className="bg-white p-8 rounded-3xl shadow-md prose"><ReactMarkdown>{story}</ReactMarkdown></div>}
+      </div>
+    </div>
+  );
+};
+
+import React, { useState } from 'react';
+import { motion } from 'motion/react';
+import { MessageSquare, Activity } from 'lucide-react';
+import { analyzeMood } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+
+export const TeenSection: React.FC<any> = ({ user, addPoints }) => {
+  const [moodText, setMoodText] = useState('');
+  const [moodResponse, setMoodResponse] = useState("Harika bir gün seni bekliyor! ✨");
+  const [hasCheckedMood, setHasCheckedMood] = useState(false);
+
+  const handleMoodAnalysis = async () => {
+    const res = await analyzeMood(moodText);
+    setMoodResponse(res);
+    addPoints(15);
+    setMoodText('');
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-50 p-6 font-sans">
+      <div className="max-w-4xl mx-auto space-y-10">
+        <div className="bg-yellow-100 p-8 shadow-xl text-center italic">
+          <ReactMarkdown>{moodResponse}</ReactMarkdown>
+        </div>
+
+        <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-zinc-100">
+          <h3 className="text-2xl font-bold text-zinc-800 mb-2">Bugün nasılsın?</h3>
+          <textarea 
+            value={moodText}
+            onChange={(e) => setMoodText(e.target.value)}
+            className="w-full h-32 p-5 bg-zinc-50 rounded-2xl outline-none"
+            placeholder="Neler hissediyorsun?..."
+          />
+          <button onClick={handleMoodAnalysis} className="w-full py-4 bg-violet-500 text-white rounded-2xl mt-4 font-bold">Analiz Et</button>
+          
+          <div className="mt-8 pt-8 border-t border-zinc-100">
+            <h4 className="text-lg font-bold mb-4">Hızlıca Bugün Nasıl Hissediyorsun?</h4>
+            {!hasCheckedMood ? (
+              <div className="flex justify-around">
+                {['😊', '😴', '🤔', '🤩'].map(emoji => (
+                  <button key={emoji} onClick={() => { addPoints(20); setHasCheckedMood(true); }} className="text-4xl hover:scale-110 transition-transform">{emoji}</button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-emerald-600 font-bold text-center">Teşekkürler! +20 Puan kazandın! 🌟</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { SHOP_ITEMS } from '../types';
+import { ShoppingBag, X } from 'lucide-react';
+
+export const FishAvatar: React.FC<any> = ({ user, onPurchase }) => {
+  const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isAwake, setIsAwake] = useState(true);
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      <AnimatePresence>
+        {isShopOpen && (
+          <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-white p-5 rounded-[2.5rem] shadow-2xl border w-72 mb-4">
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-black text-xs uppercase tracking-widest">Balık Butiği</h4>
+              <button onClick={() => setIsShopOpen(false)}><X size={20} /></button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {SHOP_ITEMS.map(item => (
+                <button key={item.id} onClick={() => onPurchase(item.id, item.price)} className="p-4 rounded-3xl border-2 hover:bg-emerald-50 transition-all">
+                  <div className="text-3xl mb-2">{item.icon}</div>
+                  <div className="text-[10px] font-black">{item.price} Puan</div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex items-center gap-4">
+        <button onClick={() => setIsShopOpen(!isShopOpen)} className="w-14 h-14 bg-white rounded-full shadow-xl flex items-center justify-center border-2"><ShoppingBag size={24} /></button>
+        <div onClick={() => setIsAwake(!isAwake)} className="w-24 h-24 rounded-full border-4 border-white shadow-2xl bg-zinc-200 flex items-center justify-center text-5xl cursor-pointer">
+          {user.avatar === 'orange' ? '🐠' : '🐟'}
+          <div className="absolute inset-0 pointer-events-none">
+            {user.unlockedItems.map(id => <span key={id} className="absolute text-3xl">{SHOP_ITEMS.find(i => i.id === id)?.icon}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+import { useState } from 'react';
+import { Onboarding } from './components/Onboarding';
+import { ChildSection } from './components/ChildSection';
+import { TeenSection } from './components/TeenSection';
+import { FishAvatar } from './components/FishAvatar';
+import { UserInfo, AppSection } from './types';
+
+export default function App() {
+  const [section, setSection] = useState<AppSection>('onboarding');
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  const handleOnboardingComplete = (info: UserInfo) => {
+    setUser(info);
+    setSection('teen'); 
+  };
+
+  const addPoints = (amount: number) => {
+    setUser(prev => prev ? { ...prev, points: prev.points + amount } : null);
+  };
+
+  const handlePurchase = (itemId: string, price: number) => {
+    setUser(prev => {
+      if (!prev || prev.points < price) return prev;
+      return { ...prev, points: prev.points - price, unlockedItems: [...prev.unlockedItems, itemId] };
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {section === 'onboarding' ? (
+        <Onboarding onComplete={handleOnboardingComplete} />
+      ) : user && (
+        <>
+          {section === 'child' ? (
+            <ChildSection user={user} onNext={() => setSection('teen')} addPoints={addPoints} />
+          ) : (
+            <TeenSection user={user} addPoints={addPoints} />
+          )}
+          <FishAvatar user={user} onPurchase={handlePurchase} />
+          <button onClick={() => setSection(section === 'child' ? 'teen' : 'child')} className="fixed top-6 right-6 font-bold text-zinc-400">
+            {section === 'child' ? 'Genç Bölümü' : 'Çocuk Bölümü'}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
