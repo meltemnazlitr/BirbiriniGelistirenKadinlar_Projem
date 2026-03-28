@@ -1,3 +1,4 @@
+nasıl yapıldı dosyasında nasıl yaptığımı anlattım. 
 BirbiriniGelistirenKadinlar_Projem
 teşekkürler! altta da yazı vardır.
 bgk tarafından verilen doldurmam gereken yazı:
