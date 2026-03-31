@@ -19,7 +19,13 @@ Nasıl Çalıştırılır?
 websiteye giriyoruz. adımızı yaşımızı yazıyor hangi avatarı istediğimizi seçiyoruz. (duygunu söyle 20 puan kazan!)
 sonrasında duruşun,gözün kilon,bir çocuk için hikaye. Hepsini dene ve işte Eline Sağlık! Elinde olan sağlık!
 
+LİNKLER
+forma koydum fakat twkrar buraya koymamızı istediğiniz için ekliyorum
+youtube
+https://youtu.be/X8jUu8sBk58?si=AYQEDYR_IVh0H_Jg
 
+replit
+https://code-website-builder--meltembreeze.replit.app
 
 
 
